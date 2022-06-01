@@ -5,17 +5,16 @@ router.get("/message", (req, res) => {
   res.json("Hello world");
 });
 
-router.post("/message", (req, res) => {
-  const { destination, body } = req.body;
-
-  MessageAppService.createMessage(destination, body)
-    .then((response) => res.status(200).json(response.data))
-    .catch(() => res.status(500).json("Server error"));
-});
 
 router.post("/messages", (req, res) => {
   const { destination, message } = req.body;
-  
+
+  const body = message
+
+  MessageAppService.sendMessage(destination, body)
+    .then((response) => res.json(response.data))
+    .catch((err) => res.json(err));
 });
+
 
 module.exports = router;
