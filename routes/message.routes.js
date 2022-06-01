@@ -5,16 +5,39 @@ router.get("/message", (req, res) => {
   res.json("Hello world");
 });
 
-
 router.post("/messages", (req, res) => {
   const { destination, message } = req.body;
 
-  const body = message
+  const body = message;
 
   MessageAppService.sendMessage(destination, body)
     .then((response) => res.json(response.data))
-    .catch((err) => res.json(err));
+    .catch((err) => {
+      if (
+        !err.config.data.includes("destination") &&
+        !err.config.data.includes("body")
+      ) {
+        return res.status(405).json({
+          message:
+            "The keys can't be empty. The necessary keys are destination and message",
+        });
+      }
+      if (!err.config.data.includes("destination")) {
+        return res.status(406).json({
+          message:
+            "The key destination must exist. The necessary keys are destination and message",
+        });
+      }
+      if (!err.config.data.includes("body")) {
+        return res.status(407).json({
+          message:
+            "The key message must exist. The necessary keys are destination and message",
+        });
+      }
+      if (err.message.includes("code 500")) {
+        return res.status(500).json({ message: "Server Error" });
+      }
+    });
 });
-
 
 module.exports = router;
