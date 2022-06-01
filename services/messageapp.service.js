@@ -7,9 +7,9 @@ class MessageAppService {
     });
   }
 
-  createMessage = (destination, body) => {
-    return this.api.post("/message", { destination, body });
-  };
+  sendMessage = (destination, body) => {
+    return this.api.post("/message", {destination, body})
+  }
 
 }
 
