@@ -44,27 +44,7 @@ router.post("/messages", (req, res) => {
       .catch((err) => {
         res.json(err)
         Message.create({send: "Message not sended"})
-        // if (
-        //   !err.config.data.includes("destination") &&
-        //   !err.config.data.includes("body")
-        // ) {
-        //   return res.status(400).json({
-        //     message:
-        //       "The keys can't be empty. The necessary keys are destination and message",
-        //   });
-        // }
-        // if (!err.config.data.includes("destination")) {
-        //   return res.status(400).json({
-        //     message:
-        //       "The key destination must exist. The necessary keys are destination and message, must be string",
-        //   });
-        // }
-        // if (!err.config.data.includes("body")) {
-        //   return res.status(400).json({
-        //     message:
-        //       "The key message must exist. The necessary keys are destination and message, must be string",
-        //   });
-        // }
+
         if (err.status === 504) {
           return Message.create({send: "The message was sent", confirmed: false})
         }

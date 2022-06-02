@@ -23,6 +23,11 @@
 							"key": "message",
 							"value": "Adios",
 							"type": "text"
+						},
+						{
+							"key": "number",
+							"value": "3",
+							"type": "text"
 						}
 					]
 				},
