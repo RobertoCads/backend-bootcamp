@@ -10,29 +10,27 @@ router.post("/messages", (req, res) => {
 
   const body = message;
 
-  if(!destination && !body) {
-    return res
-      .status(400)
-      .json({
-        message:
-          "The keys can't be empty. The necessary keys are destination and message",
-      });
+  if (!destination && !body) {
+    return res.status(400).json({
+      message:
+        "The keys can't be empty. The necessary keys are destination and message",
+    });
   }
-  if(!destination) {
+  if (destination && typeof destination !== "string" || body && typeof body !== "string") {
+    return res.status(400).json({ message: "The values must be strings" });
+  }
+  if (!destination) {
     return res.status(400).json({
       message:
         "The key destination must exist. The necessary keys are destination and message",
     });
   }
-  if(!body) {
-    return res
-      .status(400)
-      .json({
-        message:
-          "The key message must exist. The necessary keys are destination and message",
-      });
+  if (!body) {
+    return res.status(400).json({
+      message:
+        "The key message must exist. The necessary keys are destination and message",
+    });
   }
-
 
   MessageAppService.sendMessage(destination, body)
     .then((response) => res.json(response.data))
@@ -49,13 +47,13 @@ router.post("/messages", (req, res) => {
       if (!err.config.data.includes("destination")) {
         return res.status(400).json({
           message:
-            "The key destination must exist. The necessary keys are destination and message",
+            "The key destination must exist. The necessary keys are destination and message, must be string",
         });
       }
       if (!err.config.data.includes("body")) {
         return res.status(400).json({
           message:
-            "The key message must exist. The necessary keys are destination and message",
+            "The key message must exist. The necessary keys are destination and message, must be string",
         });
       }
       if (err.message.includes("code 500")) {

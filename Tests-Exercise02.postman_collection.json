@@ -120,6 +120,34 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "/messages Only String",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"destination\": \"Prueba\",\n    \"message\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
