@@ -27,8 +27,8 @@
 					]
 				},
 				"url": {
-					"raw": "https://localhost:9001/messages",
-					"protocol": "https",
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
@@ -56,8 +56,8 @@
 					]
 				},
 				"url": {
-					"raw": "https://localhost:9001/messages",
-					"protocol": "https",
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
@@ -85,8 +85,8 @@
 					]
 				},
 				"url": {
-					"raw": "https://localhost:9001/messages",
-					"protocol": "https",
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
@@ -108,8 +108,8 @@
 					"urlencoded": []
 				},
 				"url": {
-					"raw": "https://localhost:9001/messages",
-					"protocol": "https",
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
 					"host": [
 						"localhost"
 					],
