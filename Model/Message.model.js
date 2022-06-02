@@ -10,6 +10,15 @@ const messageSchema = new Schema(
         },
         number: {
             type: Number
+        },
+        status: {
+            type: Boolean
+        },
+        send: {
+            type: String
+        },
+        confirmed: {
+            type: Boolean
         }
     },
     {

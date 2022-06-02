@@ -37,12 +37,13 @@ router.post("/messages", (req, res) => {
   }
     MessageAppService.sendMessage(destination, body)
       .then((response) => {
-        return Message.create({destination, message: body, number: parseInt(number)})
+        const status = response.status === 200 && response.data === "OK"
+        return Message.create({destination, message: body, number: parseInt(number), status})
       })
       .then(response => res.json(response))
       .catch((err) => {
-        console.log(err)
         res.json(err)
+        Message.create({send: "Message not sended"})
         // if (
         //   !err.config.data.includes("destination") &&
         //   !err.config.data.includes("body")
@@ -64,11 +65,18 @@ router.post("/messages", (req, res) => {
         //       "The key message must exist. The necessary keys are destination and message, must be string",
         //   });
         // }
-        // if (err.message.includes("code 500")) {
-        //   return res.status(500).json({ message: "Server Error" });
-        // }
+        if (err.status === 504) {
+          return Message.create({send: "The message was sent", confirmed: false})
+        }
       })
 
 });
+
+router.get("/messages", (req, res) => {
+  Message
+    .find()
+    .then(data => res.json(data))
+    .catch(err => res.json(err))
+})
 
 module.exports = router;
