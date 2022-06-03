@@ -12,19 +12,41 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "destination",
-							"value": "Hola",
-							"type": "text"
-						},
-						{
-							"key": "message",
-							"value": "Adios",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"destination\": \"Hola\",\n    \"message\": \"Prueba\",\n    \"number\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"messages"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/messages (null)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"destination\": null,\n    \"message\": \"Prueba\",\n    \"number\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
 					"raw": "http://localhost:9001/messages",
@@ -46,14 +68,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "destination",
-							"value": "Hola",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"destination\": \"Hola\",\n    \"number\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "http://localhost:9001/messages",
@@ -75,14 +96,41 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "message",
-							"value": "Hola",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\n    \"message\": \"Prueba\",\n    \"number\": 1 \n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"messages"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/messages (Number Fail)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"destination\": \"Hola\",\n    \"message\": \"Prueba\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
 					"raw": "http://localhost:9001/messages",
@@ -104,8 +152,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": []
+					"mode": "raw",
+					"raw": "{\n    \n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
 					"raw": "http://localhost:9001/messages",
@@ -128,13 +181,32 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"destination\": \"Prueba\",\n    \"message\": 1\n}",
+					"raw": "{\n    \"destination\": \"Prueba\",\n    \"message\": 10,\n    \"number\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
+				"url": {
+					"raw": "http://localhost:9001/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/message (Get information)",
+			"request": {
+				"method": "GET",
+				"header": [],
 				"url": {
 					"raw": "http://localhost:9001/messages",
 					"protocol": "http",
