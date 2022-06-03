@@ -20,6 +20,17 @@ Didn't find any other status code more specific than 400.
 
 - If 'message' key doesn't exist --> Error (400) with message 'The key message must exist. The necessary keys are destination and message'
 
+## Common Errors
+| Code Status | Error     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `400`      | `emtpy` | If the keys are empty it will appear an appropriate error message |
+| `400`      | `destination` | If the key destination is empty it will appear an appropriate error message |
+| `400`      | `message` | If the key message is empty it will appear an appropriate error message |
+| `400`      | `number` | If the key number is empty it will appear an appropriate error message |
+| `400`      | `destination & message` | If destination and message aren't strings it will appear an appropiate error message |
+| `500`      | `API error` | The APi will sometimes have an error on purpose |
+| `504`      | `Timeout` | This error will occur if there is a timeout loading the API |
+
 
 ## Bussiness decisions
 ---
