@@ -13,7 +13,7 @@ services:
       - messageapp
     image: "mongo:5.0.8-focal"
     volumes:
-      - ./db:/db
+      - ./data/db:/data/db
     ports:
       - "27017:27017"
     command: 

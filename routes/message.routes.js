@@ -14,26 +14,30 @@ router.post("/messages", (req, res) => {
   if (!destination && !body) {
     return res.status(400).json({
       message:
-        "The keys can't be empty. The necessary keys are destination and message",
+        "The keys can't be empty. The necessary keys are destination, message and number",
     });
   }
   if (
     (destination && typeof destination !== "string") ||
     (body && typeof body !== "string")
   ) {
-    return res.status(400).json({ message: "The values must be strings" });
+    return res.status(400).json({ message: "The values of destination and message must be strings" });
   }
   if (!destination) {
     return res.status(400).json({
       message:
-        "The key destination must exist. The necessary keys are destination and message",
+        "The key destination must exist. The necessary keys are destination, message and number",
     });
   }
   if (!body) {
     return res.status(400).json({
       message:
-        "The key message must exist. The necessary keys are destination and message",
+        "The key message must exist. The necessary keys are destination, message and number",
     });
+  }
+
+  if(!number) {
+    return res.status(400).json({message: "The key number must exist. The necessary keys are destination, message and number"})
   }
   MessageAppService.sendMessage(destination, body)
     .then((response) => {
