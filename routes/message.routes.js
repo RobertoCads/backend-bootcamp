@@ -35,28 +35,47 @@ router.post("/messages", (req, res) => {
         "The key message must exist. The necessary keys are destination and message",
     });
   }
-    MessageAppService.sendMessage(destination, body)
-      .then((response) => {
-        const status = response.status === 200 && response.data === "OK"
-        return Message.create({destination, message: body, number: parseInt(number), status})
-      })
-      .then(response => res.json(response))
-      .catch((err) => {
-        res.json(err)
-        Message.create({send: "Message not sended"})
+  MessageAppService.sendMessage(destination, body)
+    .then((response) => {
+      const status = response.status === 200 && response.data === "OK";
+      return Message.create({
+        destination,
+        message: body,
+        number: parseInt(number),
+        status,
+        send: "Message sended",
+        confirmed: true,
+      });
+    })
+    .then((response) => res.json(response))
+    .catch((err) => {
+      res.json(err);
+      Message.create({
+        destination,
+        message: body,
+        number: parseInt(number),
+        status: false,
+        send: "Message not sended",
+        confirmed: false,
+      });
 
-        if (err.status === 504) {
-          return Message.create({send: "The message was sent", confirmed: false})
-        }
-      })
-
+      if (err.status === 504) {
+        return Message.create({
+          destination,
+          message: body,
+          number: parseInt(number),
+          status: false,
+          send: "The message was sent",
+          confirmed: false,
+        });
+      }
+    });
 });
 
 router.get("/messages", (req, res) => {
-  Message
-    .find()
-    .then(data => res.json(data))
-    .catch(err => res.json(err))
-})
+  Message.find()
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err));
+});
 
 module.exports = router;
