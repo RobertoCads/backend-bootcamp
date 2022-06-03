@@ -12,14 +12,8 @@ const messageSchema = new Schema(
             type: Number
         },
         status: {
-            type: Boolean
+            type: String,
         },
-        send: {
-            type: String
-        },
-        confirmed: {
-            type: Boolean
-        }
     },
     {
         timestamps: true
