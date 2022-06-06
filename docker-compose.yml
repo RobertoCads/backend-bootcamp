@@ -1,23 +1,19 @@
-version: '3'
+version: "3"
 services:
-  exercisecabify:
+  cabify-messageapp:
     build: .
     ports:
-      - "9001:9001"
+      - "9003:9003"
   messageapp:
-    image: "cabify/backend-bootcamp-messageapp:latest"
+    image: cabify/backend-bootcamp-messageapp
     ports:
       - "3000:3000"
-  mongo:
-    depends_on:
-      - messageapp
-    image: "mongo:5.0.8-focal"
+  mongodb:
+    image: mongo
     volumes:
       - ./data/db:/data/db
     ports:
-      - "27017:27017"
+      - 27017:27017
     command: 
-      - "--logpath"
-      - "/var/log/mongodb/mongod.log"
-
-
+      - '--logpath'
+      - '/var/log/mongodb/mongod.log'
