@@ -1,3 +1,3 @@
-import Budget from "../models/budget.js"
+import { Budget } from "../models/budget.js";
 
-export default () => Budget.findOne()
+export default () => Budget.findOne();

@@ -10,7 +10,6 @@ export default async (req, res) => {
 
   const actualAmount = await checkBudget()
 
-    console.log(actualAmount.amount);
     if (actualAmount.amount < MESSAGE_PRICE) {
       return res.status(500).json("Not enough money")
     } else {

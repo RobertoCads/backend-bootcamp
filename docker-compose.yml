@@ -17,3 +17,12 @@ services:
     command: 
       - '--logpath'
       - '/var/log/mongodb/mongod.log'
+  mongobackup:
+    image: mongo
+    volumes:
+      - ./data/db2:/data/db2
+    ports:
+      - 27018:27017
+    command: 
+      - '--logpath'
+      - '/var/log/mongodb/mongod2.log'
