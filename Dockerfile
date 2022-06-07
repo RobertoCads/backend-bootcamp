@@ -1,5 +1,8 @@
-FROM node
-COPY package.json ./
+FROM node:latest
+ADD . /app
+WORKDIR /app
 RUN npm install
-COPY . ./
-CMD ["node", "server.js"]
+
+CMD ["node", "index.js"]
+# CMD ["DEBUG=express:*", "node", "index.js"]
+
