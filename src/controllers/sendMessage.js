@@ -10,7 +10,7 @@ export default async (req, res) => {
 
   const actualAmount = await checkBudget()
 
-
+    console.log(actualAmount.amount);
     if (actualAmount.amount < MESSAGE_PRICE) {
       return res.status(500).json("Not enough money")
     } else {
@@ -19,8 +19,8 @@ export default async (req, res) => {
 
 
   const postOptions = {
-    // host: "127.0.0.1",
-    host: "messageapp",
+    host: "localhost", // en local
+    // host: "messageapp", // Para imagen docker
     port: 3000,
     path: "/message",
     method: "post",

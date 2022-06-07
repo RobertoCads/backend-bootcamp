@@ -1,9 +1,9 @@
 version: "3"
 services:
-  cabify-messageapp:
-    build: .
-    ports:
-      - "9003:9003"
+  # cabify-messageapp:
+  #   build: .
+  #   ports:
+  #     - "9003:9003"
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
