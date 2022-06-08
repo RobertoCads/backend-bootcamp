@@ -1,9 +1,11 @@
 version: "3"
 services:
-  # cabify-messageapp:
-  #   build: .
-  #   ports:
-  #     - "9003:9003"
+  cabify-messageapp:
+    build: .
+    ports:
+      - "9003:9003"
+    depends_on:
+      - mongodb
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -19,6 +21,8 @@ services:
       - '/var/log/mongodb/mongod.log'
   mongobackup:
     image: mongo
+    depends_on:
+      - mongodb
     volumes:
       - ./data/db2:/data/db2
     ports:

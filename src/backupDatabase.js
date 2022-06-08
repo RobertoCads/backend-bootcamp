@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 
-const server = "localhost:27018"; // en local
-// const server = "mongobackup:27018"; // en docker
+// const server = "localhost:27018"; // en local
+const server = "mongobackup:27017"; // en docker
 
 const database = "cabify_bootcamp_backup";
 
