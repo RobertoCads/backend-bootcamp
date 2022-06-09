@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-
-import database from "../database.js";
 import backupDatabase from "../backupDatabase.js";
+import database from "../database.js";
+
 
 const budgetSchema = new mongoose.Schema(
   {

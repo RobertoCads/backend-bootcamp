@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
+import "dotenv/config"
+
+const server = process.env.CREDIT;
 
 
-const server = "localhost:27018"; // en local
-// const server = "mongobackup:27017"; // en docker
-
-const database = "cabify_bootcamp_backup";
+const database = "credit";
 
 export default mongoose.createConnection(`mongodb://${server}/${database}`, {
   useNewUrlParser: true,
