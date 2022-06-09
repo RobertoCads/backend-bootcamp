@@ -1,11 +1,11 @@
 version: "3"
 services:
-  cabify-messageapp:
-    build: .
-    ports:
-      - "9003:9003"
-    depends_on:
-      - mongodb
+  # cabify-messageapp:
+  #   build: .
+  #   ports:
+  #     - "9003:9003"
+  #   depends_on:
+  #     - mongodb
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -30,3 +30,21 @@ services:
     command: 
       - '--logpath'
       - '/var/log/mongodb/mongod2.log'
+  cache:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache:/data
+  redis-commander:
+    container_name: redis-commander
+    image: rediscommander/redis-commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:cache:6379
+    ports:
+      - "8081:8081"
+volumes:
+  cache:
+    driver: local
