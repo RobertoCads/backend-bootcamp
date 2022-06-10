@@ -1,11 +1,9 @@
-// import checkBudget from "../../../credit/src/clients/checkBudget"
 import saveMessage from "../clients/saveMessage.js"
 import uniqid from "uniqid"
 import queue from "./../utils/messageQueue.js"
 
 export default async (req, res) => {
-  const body = JSON.stringify(req.body);
-
+    
   const statusId = uniqid()
 
   let message

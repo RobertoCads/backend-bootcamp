@@ -1,7 +1,5 @@
 import Queue from "bull";
 import http from "http";
-// import checkBudget from "../clients/checkBudget.js";
-// import saveAmount from "../clients/saveAmount.js";
 import sendMessage from "../controllers/sendMessage.js";
 import "dotenv/config";
 

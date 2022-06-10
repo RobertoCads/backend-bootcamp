@@ -1,6 +1,5 @@
 import Queue from "bull";
 import "dotenv/config";
-import saveAmount from "../clients/saveAmount.js";
 import { hasMoney } from "./utilFunctions.js";
 const MESSAGE_CREDIT = 2;
 

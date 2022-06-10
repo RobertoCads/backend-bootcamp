@@ -1,6 +1,5 @@
 import http from "http";
 import saveMessage from "../clients/saveMessage.js";
-import saveAmount from "./../../../credit/src/clients/saveAmount.js";
 import "dotenv/config";
 
 import sendCreditQueue from "../utils/sendCreditQueue.js";
@@ -15,7 +14,6 @@ export default async (body) => {
       statusId: body.statusId,
       status: (body.status = "NOT ENOUGH MONEY"),
     });
-    // return res.status(500).json("Not enough money");
     console.log("Esta llegando------------------");
     return "Pleas Refund Credit";
   }
@@ -45,13 +43,9 @@ export default async (body) => {
       if (postRes.statusCode !== 200) {
         throw new Error("Error in the messageapp request");
       }
-      // res.statusCode = 200;
-      // res.end(postRes.body);
     } catch (error) {
-      sendCreditQueue({amount: MESSAGE_PRICE});
+      sendCreditQueue({ amount: MESSAGE_PRICE });
       console.log(error.message, "Your money was returned");
-      // res.statusCode = 500;
-      // res.end(`Internal server error: SERVICE ERROR ${error.message}`);
     }
   });
 
@@ -64,20 +58,16 @@ export default async (body) => {
         destination: body.destination,
         body: body.body,
         statusId: body.statusId,
-        status: "TIMEOUT",
+        status: (body.status = "TIMEOUT"),
       });
     } finally {
-      sendCreditQueue({amount: MESSAGE_PRICE});
+      sendCreditQueue({ amount: MESSAGE_PRICE });
       console.log("TIMEOUT");
-      // res.statusCode = 500;
-      // res.end("Internal server error: TIMEOUT");
     }
   });
 
   postReq.on("error", (error) => {
     console.log(error, "Server Error");
-    // res.statusCode = 500;
-    // res.end(error.message);
   });
 
   const bodyString = {
@@ -91,15 +81,3 @@ export default async (body) => {
   postReq.write(payload);
   postReq.end();
 };
-
-// const statusId = uniqid()
-
-// try {
-//   saveMessage({
-//     ...req.body,
-//     status: "PENDING",
-//     statusId
-//   })
-// } catch(err) {
-//   return res.status(500).json("Error saving the message", error)
-// }

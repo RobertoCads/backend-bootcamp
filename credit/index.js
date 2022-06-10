@@ -1,6 +1,5 @@
 import bodyParser from "body-parser";
 import express from "express";
-// import redisStart from "./src/utils/redisStart.js";
 import { ValidationError, Validator } from "express-json-validator-middleware";
 import creditQueue from "./src/utils/creditQueue.js";
 import receivingCreditQueue from "./src/utils/receivingCreditQueue.js";
@@ -11,7 +10,7 @@ receivingCreditQueue();
 import sendAmount from "./src/controllers/sendAmount.js";
 
 const app = express();
-// const redis = redisStart();
+
 
 const validator = new Validator({ allErrors: true });
 const { validate } = validator;
