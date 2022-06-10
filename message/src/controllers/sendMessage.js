@@ -4,22 +4,27 @@ import saveAmount from "./../../../credit/src/clients/saveAmount.js";
 import queue from "../utils/messageQueue.js";
 import uniqid from "uniqid";
 import "dotenv/config";
+import { Message } from "../models/message.js";
+import checkBalance from "./checkBalance.js";
+
 
 const MESSAGE_PRICE = 2;
 
 export default async (body) => {
-
-
-
   if (body.status === "NOT ENOUGH MONEY") {
+    await saveMessage({
+      destination: body.destination,
+      body: body.body,
+      statusId: body.statusId,
+      status: body.status = "NOT ENOUGH MONEY",
+    });
     // return res.status(500).json("Not enough money");
-    console.log("Not enough money")
+    console.log("Esta llegando------------------")
+    return "Pleas Refund Credit";
   }
 
-
-
   const postOptions = {
-    host: process.env.MESSAGEAPP, // Para imagen docker
+    host: process.env.MESSAGEAPP,
     port: 3000,
     path: "/message",
     method: "post",
@@ -35,7 +40,9 @@ export default async (body) => {
   postReq.on("response", async (postRes) => {
     try {
       await saveMessage({
-        ...body,
+        destination: body.destination,
+        body: body.body,
+        statusId: body.statusId,
         status: postRes.statusCode === 200 ? "OK" : "ERROR",
       });
       if (postRes.statusCode !== 200) {
@@ -47,7 +54,7 @@ export default async (body) => {
       saveAmount(MESSAGE_PRICE);
       console.log(error.message, "Your money was returned");
       // res.statusCode = 500;
-      res.end(`Internal server error: SERVICE ERROR ${error.message}`);
+      // res.end(`Internal server error: SERVICE ERROR ${error.message}`);
     }
   });
 
@@ -57,7 +64,9 @@ export default async (body) => {
 
     try {
       await saveMessage({
-        ...body,
+        destination: body.destination,
+        body: body.body,
+        statusId: body.statusId,
         status: "TIMEOUT",
       });
     } finally {
@@ -76,12 +85,12 @@ export default async (body) => {
 
   const bodyString = {
     destination: body.destination,
-    body: body.body
-  }
+    body: body.body,
+  };
 
-  const payload = JSON.stringify(bodyString)
+  const payload = JSON.stringify(bodyString);
 
-  console.log(payload, "--------PAYLOAD-----------")
+  console.log(payload, "--------PAYLOAD-----------");
   postReq.write(payload);
   postReq.end();
 };

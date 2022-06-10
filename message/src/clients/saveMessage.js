@@ -12,13 +12,12 @@ export default async (messageParams) => {
   const backupMessage = new BackupMessage(messageParams);
   
   const dbs = [Message, BackupMessage]
-  
   try {
     const doc = async () => {
       await message.save();
       try {
         await backupMessage.save();
-        // queue(cleanPending(dbs))
+        cleanPending(dbs)
       } catch(err) {
         retry(backupMessage, 3)
         console.log(err, "Timeout Error")

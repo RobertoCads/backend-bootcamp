@@ -27,10 +27,10 @@ services:
   #     - mongodb_credit
   #     - replica_credit
   #     - redis
-  # messageapp:
-  #   image: cabify/backend-bootcamp-messageapp
-  #   ports:
-  #     - "3000:3000"
+  messageapp:
+    image: cabify/backend-bootcamp-messageapp
+    ports:
+      - "3000:3000"
 
   mongodb_credit:
     image: mongo
