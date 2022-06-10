@@ -1,12 +1,9 @@
 import http from "http";
 import saveMessage from "../clients/saveMessage.js";
 import saveAmount from "./../../../credit/src/clients/saveAmount.js";
-import queue from "../utils/messageQueue.js";
-import uniqid from "uniqid";
 import "dotenv/config";
-import { Message } from "../models/message.js";
-import checkBalance from "./checkBalance.js";
 
+import sendCreditQueue from "../utils/sendCreditQueue.js";
 
 const MESSAGE_PRICE = 2;
 
@@ -16,10 +13,10 @@ export default async (body) => {
       destination: body.destination,
       body: body.body,
       statusId: body.statusId,
-      status: body.status = "NOT ENOUGH MONEY",
+      status: (body.status = "NOT ENOUGH MONEY"),
     });
     // return res.status(500).json("Not enough money");
-    console.log("Esta llegando------------------")
+    console.log("Esta llegando------------------");
     return "Pleas Refund Credit";
   }
 
@@ -51,7 +48,7 @@ export default async (body) => {
       // res.statusCode = 200;
       // res.end(postRes.body);
     } catch (error) {
-      saveAmount(MESSAGE_PRICE);
+      sendCreditQueue({amount: MESSAGE_PRICE});
       console.log(error.message, "Your money was returned");
       // res.statusCode = 500;
       // res.end(`Internal server error: SERVICE ERROR ${error.message}`);
@@ -70,7 +67,7 @@ export default async (body) => {
         status: "TIMEOUT",
       });
     } finally {
-      saveAmount(MESSAGE_PRICE);
+      sendCreditQueue({amount: MESSAGE_PRICE});
       console.log("TIMEOUT");
       // res.statusCode = 500;
       // res.end("Internal server error: TIMEOUT");

@@ -1,16 +1,18 @@
 import Queue from "bull";
 import "dotenv/config";
+import saveAmount from "../clients/saveAmount.js";
 import { hasMoney } from "./utilFunctions.js";
 const MESSAGE_CREDIT = 2;
 
-const receiveFromMessage = new Queue("credit-queue", {
-  redis: { host: process.env.REDISDOKER, port: 6379 },
-});
-
-const sendToMessage = new Queue("message-queue", {
-  redis: { host: process.env.REDISDOKER, port: 6379 },
-});
 export default (message) => {
+  const receiveFromMessage = new Queue("credit-queue", {
+    redis: { host: process.env.REDISDOKER, port: 6379 },
+  });
+
+  const sendToMessage = new Queue("message-queue", {
+    redis: { host: process.env.REDISDOKER, port: 6379 },
+  });
+
   const main = async () => {
     console.log(message);
     await sendToMessage.add(message);

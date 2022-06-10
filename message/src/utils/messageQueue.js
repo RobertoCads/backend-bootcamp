@@ -5,20 +5,20 @@ import http from "http";
 import sendMessage from "../controllers/sendMessage.js";
 import "dotenv/config";
 
-const sendToCredit = new Queue("credit-queue", {
-  redis: { host: process.env.REDISDOKER, port: 6379 },
-});
-
-const receiveFromCredit = new Queue("message-queue", {
-  redis: { host: process.env.REDISDOKER, port: 6379 },
-});
-
-const saveMessage = new Queue("save-message", {
-  redis: { host: process.env.REDISDOKER, port: 6379 },
-});
-
 export default (task, statusId) => {
   statusId && console.log("Processing Message", statusId);
+
+  const sendToCredit = new Queue("credit-queue", {
+    redis: { host: process.env.REDISDOKER, port: 6379 },
+  });
+
+  const receiveFromCredit = new Queue("message-queue", {
+    redis: { host: process.env.REDISDOKER, port: 6379 },
+  });
+
+  const saveMessage = new Queue("save-message", {
+    redis: { host: process.env.REDISDOKER, port: 6379 },
+  });
 
   const main = async () => {
     console.log("Message Processing", statusId);
@@ -26,7 +26,7 @@ export default (task, statusId) => {
   };
 
   receiveFromCredit.process(async (job, done) => {
-      console.log(job.data, "JOB DATAAAA_------------")
+    console.log(job.data, "JOB DATAAAA_------------");
     saveMessage.add(await sendMessage(job.data));
     done();
   });

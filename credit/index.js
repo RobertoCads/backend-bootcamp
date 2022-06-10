@@ -3,8 +3,10 @@ import express from "express";
 // import redisStart from "./src/utils/redisStart.js";
 import { ValidationError, Validator } from "express-json-validator-middleware";
 import creditQueue from "./src/utils/creditQueue.js";
+import receivingCreditQueue from "./src/utils/receivingCreditQueue.js";
 
-creditQueue()
+creditQueue();
+receivingCreditQueue();
 
 import sendAmount from "./src/controllers/sendAmount.js";
 
@@ -13,7 +15,6 @@ const app = express();
 
 const validator = new Validator({ allErrors: true });
 const { validate } = validator;
-
 
 const budgetSchema = {
   type: "object",
@@ -24,7 +25,6 @@ const budgetSchema = {
     },
   },
 };
-
 
 app.post(
   "/credit",
