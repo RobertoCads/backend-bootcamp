@@ -12,13 +12,12 @@ export default async (messageParams) => {
   const backupMessage = new BackupMessage(messageParams);
   
   const dbs = [Message, BackupMessage]
-  
   try {
     const doc = async () => {
       await message.save();
       try {
         await backupMessage.save();
-        queue(cleanPending(dbs))
+        cleanPending(dbs)
       } catch(err) {
         retry(backupMessage, 3)
         console.log(err, "Timeout Error")
@@ -26,7 +25,7 @@ export default async (messageParams) => {
     };
 
     mutex.lock(function () {
-      console.log("Message saved succesfully:", doc);
+      console.log("Message saved succesfully:", message);
       doc();
       mutex.unlock();
     });

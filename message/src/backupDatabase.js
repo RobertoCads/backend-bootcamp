@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import "dotenv/config"
 
-const server = "localhost:27017"; // en local
-// const server = "mongodb:27017"; // en docker
+const server = process.env.REPLICA_MESSAGE;
 
-const database = "cabify_bootcamp";
+
+const database = "replica_message";
 
 export default mongoose.createConnection(`mongodb://${server}/${database}`, {
   useNewUrlParser: true,

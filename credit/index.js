@@ -1,34 +1,19 @@
 import bodyParser from "body-parser";
 import express from "express";
-import redisStart from "./src/utils/redisStart.js";
 import { ValidationError, Validator } from "express-json-validator-middleware";
+import creditQueue from "./src/utils/creditQueue.js";
+import receivingCreditQueue from "./src/utils/receivingCreditQueue.js";
 
-import getMessages from "./src/controllers/getMessages.js";
-import sendMessage from "./src/controllers/sendMessage.js";
+creditQueue();
+receivingCreditQueue();
+
 import sendAmount from "./src/controllers/sendAmount.js";
-import getMessageStatus from "./src/clients/getMessageStatus.js";
-
 
 const app = express();
-const redis = redisStart();
+
 
 const validator = new Validator({ allErrors: true });
 const { validate } = validator;
-
-
-
-const messageSchema = {
-  type: "object",
-  required: ["destination", "body"],
-  properties: {
-    destination: {
-      type: "string",
-    },
-    body: {
-      type: "string",
-    },
-  },
-};
 
 const budgetSchema = {
   type: "object",
@@ -41,22 +26,11 @@ const budgetSchema = {
 };
 
 app.post(
-  "/message",
-  bodyParser.json(),
-  validate({ body: messageSchema }),
-  sendMessage
-);
-
-app.get("/messages", getMessages);
-
-app.post(
   "/credit",
   bodyParser.json(),
   validate({ body: budgetSchema }),
   sendAmount
 );
-
-app.get("/message/:messageId/status", getMessageStatus);
 
 app.use((err, req, res, _next) => {
   console.log(res.body);
@@ -67,7 +41,7 @@ app.use((err, req, res, _next) => {
   }
 });
 
-const port = 9003;
+const port = 9017;
 app.listen(port, () => {
   console.log("App started on PORT: ", port);
 });
