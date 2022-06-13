@@ -1,32 +1,68 @@
 version: "3"
 services:
-  # message:
-  #   build: message/
-  #   ports:
-  #     - "9003:9003"
-  #   links:
-  #     - messageapp
-  #     - mongodb_message
-  #     - replica_message
-  #     - redis
-  #     - credit
-  #   depends_on:
-  #     - messageapp
-  #     - mongodb_message
-  #     - replica_message
-  #     - redis
-  # credit:
-  #   build: credit/
-  #   ports:
-  #     - "9017:9017"
-  #   links:
-  #     - mongodb_credit
-  #     - replica_credit
-  #     - redis
-  #   depends_on:
-  #     - mongodb_credit
-  #     - replica_credit
-  #     - redis
+  message:
+    build: message/
+    # ports:
+    #   - "9003:9003"
+    environment:
+      - MESSAGE_PORT=9003
+    links:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+      - credit
+    depends_on:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+  message2:
+    build: message/
+    # ports:
+    #   - "9004:9003"
+    environment:
+      - MESSAGE_PORT=9004
+    links:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+      - credit
+    depends_on:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+  message3:
+    build: message/
+    # ports:
+    #   - "9005:9003"
+    environment:
+      - MESSAGE_PORT=9005
+    links:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+      - credit
+    depends_on:
+      - messageapp
+      - mongodb_message
+      - replica_message
+      - redis
+  credit:
+    build: credit/
+    ports:
+      - "9017:9017"
+    links:
+      - mongodb_credit
+      - replica_credit
+      - redis
+    depends_on:
+      - mongodb_credit
+      - replica_credit
+      - redis
   messageapp:
     image: cabify/backend-bootcamp-messageapp
     ports:
@@ -74,6 +110,17 @@ services:
     image: redis
     ports:
       - 6379:6379
+
+  haproxy_img:
+    build: ./haproxy
+    ports:
+      - 8080:8080
+    expose:
+      - 80
+    depends_on:
+      - message
+      - message2
+      - message3
   # redis-commander:
   #   container_name: redis-commander
   #   image: rediscommander/redis-commander
@@ -82,61 +129,3 @@ services:
   #     - REDIS_HOSTS=local:redis:6379
   #   ports:
   #     - "8081:8081"
-
-
-
-
-
-
-
-
-# version: "3"
-# services:
-#   cabify-messageapp:
-#     build: .
-#     ports:
-#       - "9003:9003"
-#     depends_on:
-#       - mongodb
-#   messageapp:
-#     image: cabify/backend-bootcamp-messageapp
-#     ports:
-#       - "3000:3000"
-#   mongodb:
-#     image: mongo
-#     volumes:
-#       - ./data/db:/data/db
-#     ports:
-#       - 27017:27017
-#     command: 
-#       - '--logpath'
-#       - '/var/log/mongodb/mongod.log'
-#   mongobackup:
-#     image: mongo
-#     depends_on:
-#       - mongodb
-#     volumes:
-#       - ./data/db2:/data/db2
-#     ports:
-#       - 27018:27017
-#     command: 
-#       - '--logpath'
-#       - '/var/log/mongodb/mongod2.log'
-#   redis:
-#     image: redis
-#     restart: always
-#     ports:
-#       - "6379:6379"
-#     volumes:
-#       - redis:/data
-#   # redis-commander:
-#   #   container_name: redis-commander
-#   #   image: rediscommander/redis-commander
-#   #   restart: always
-#   #   environment:
-#   #     - REDIS_HOSTS=local:cache:6379
-#   #   ports:
-#   #     - "8081:8081"
-# volumes:
-#   cache:
-#     driver: local
