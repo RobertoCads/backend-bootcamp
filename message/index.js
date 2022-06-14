@@ -52,7 +52,7 @@ app.use((err, req, res, _next) => {
   }
 });
 
-const MESSAGE_PORT = process.env.MESSAGE_PORT
-app.listen(MESSAGE_PORT, () => {
-  console.log("App started on PORT: ", MESSAGE_PORT);
+const port = 9007
+app.listen(port, () => {
+  console.log("App started on PORT: ", port);
 });

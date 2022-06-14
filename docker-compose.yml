@@ -2,10 +2,10 @@ version: "3"
 services:
   message:
     build: message/
-    # ports:
-    #   - "9003:9003"
-    environment:
-      - MESSAGE_PORT=9003
+    ports:
+      - "9003:9007"
+    # environment:
+    #   - MESSAGE_PORT=9003
     links:
       - messageapp
       - mongodb_message
@@ -19,10 +19,10 @@ services:
       - redis
   message2:
     build: message/
-    # ports:
-    #   - "9004:9003"
-    environment:
-      - MESSAGE_PORT=9004
+    ports:
+      - "9004:9007"
+    # environment:
+    #   - MESSAGE_PORT=9004
     links:
       - messageapp
       - mongodb_message
@@ -36,10 +36,10 @@ services:
       - redis
   message3:
     build: message/
-    # ports:
-    #   - "9005:9003"
-    environment:
-      - MESSAGE_PORT=9005
+    ports:
+      - "9005:9007"
+    # environment:
+    #   - MESSAGE_PORT=9005
     links:
       - messageapp
       - mongodb_message
