@@ -2,51 +2,79 @@ version: "3"
 services:
   message:
     build: message/
+    image: message
+    deploy:
+      replicas: 4
     ports:
-      - "9003:9007"
+      - 80
+    environment:
+      - SERVICE_NAME=message-v1
     links:
       - messageapp
       - mongodb_message
       - replica_message
       - redis
       - credit
+      - haproxy
     depends_on:
       - messageapp
       - mongodb_message
       - replica_message
       - redis
-  message2:
-    build: message/
+  message2_canary:
+    build: message2/
+    image: message2_canary
+    deploy:
+      replicas: 4
     ports:
-      - "9004:9007"
+      - 80
+    environment:
+      - SERVICE_NAME=message-v2
     links:
       - messageapp
       - mongodb_message
       - replica_message
       - redis
       - credit
+      - haproxy
     depends_on:
       - messageapp
       - mongodb_message
       - replica_message
       - redis
-  message3:
-    build: message/
-    ports:
-      - "9005:9007"
-    links:
-      - messageapp
-      - mongodb_message
-      - replica_message
-      - redis
-      - credit
-    depends_on:
-      - messageapp
-      - mongodb_message
-      - replica_message
-      - redis
+  # message2:
+  #   build: message/
+  #   ports:
+  #     - "9004:9007"
+  #   links:
+  #     - messageapp
+  #     - mongodb_message
+  #     - replica_message
+  #     - redis
+  #     - credit
+  #   depends_on:
+  #     - messageapp
+  #     - mongodb_message
+  #     - replica_message
+  #     - redis
+  # message3:
+  #   build: message/
+  #   ports:
+  #     - "9005:9007"
+  #   links:
+  #     - messageapp
+  #     - mongodb_message
+  #     - replica_message
+  #     - redis
+  #     - credit
+  #   depends_on:
+  #     - messageapp
+  #     - mongodb_message
+  #     - replica_message
+  #     - redis
   credit:
     build: credit/
+    image: credit
     ports:
       - "9017:9017"
     links:
@@ -105,16 +133,30 @@ services:
     ports:
       - 6379:6379
 
-  haproxy_img:
-    build: ./haproxy
+  registrator:
+    image: gliderlabs/registrator
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    command: -internal consul://consul:8500
+    depends_on:
+      - consul
+    links:
+      - consul
+  consul: 
+    image: consul
+    command: "agent -server -bootstrap -ui -client=0.0.0.0 -bind='{{ GetPrivateIP }}'"
+  haproxy:
+    image: haproxy:1.8-alpine
     ports:
-      - 8080:8080
+      - 48151:48151
     expose:
       - 80
     depends_on:
-      - message
-      - message2
-      - message3
+      - registrator
+    links:
+      - registrator
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
   # redis-commander:
   #   container_name: redis-commander
   #   image: rediscommander/redis-commander
