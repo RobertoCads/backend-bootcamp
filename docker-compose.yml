@@ -2,81 +2,22 @@ version: "3"
 services:
   message:
     build: message/
-    image: message
-    deploy:
-      replicas: 4
     ports:
-      - 80
-    environment:
-      - SERVICE_NAME=message-v1
+      - "9010:9010"
     links:
       - messageapp
       - mongodb_message
       - replica_message
       - redis
-      - credit
-      - haproxy
     depends_on:
       - messageapp
       - mongodb_message
       - replica_message
       - redis
-  message2_canary:
-    build: message2/
-    image: message2_canary
-    deploy:
-      replicas: 4
-    ports:
-      - 80
-    environment:
-      - SERVICE_NAME=message-v2
-    links:
-      - messageapp
-      - mongodb_message
-      - replica_message
-      - redis
-      - credit
-      - haproxy
-    depends_on:
-      - messageapp
-      - mongodb_message
-      - replica_message
-      - redis
-  # message2:
-  #   build: message/
-  #   ports:
-  #     - "9004:9007"
-  #   links:
-  #     - messageapp
-  #     - mongodb_message
-  #     - replica_message
-  #     - redis
-  #     - credit
-  #   depends_on:
-  #     - messageapp
-  #     - mongodb_message
-  #     - replica_message
-  #     - redis
-  # message3:
-  #   build: message/
-  #   ports:
-  #     - "9005:9007"
-  #   links:
-  #     - messageapp
-  #     - mongodb_message
-  #     - replica_message
-  #     - redis
-  #     - credit
-  #   depends_on:
-  #     - messageapp
-  #     - mongodb_message
-  #     - replica_message
-  #     - redis
   credit:
     build: credit/
-    image: credit
     ports:
-      - "9017:9017"
+      - "9020:9020"
     links:
       - mongodb_credit
       - replica_credit
@@ -86,82 +27,69 @@ services:
       - replica_credit
       - redis
   messageapp:
-    image: cabify/backend-bootcamp-messageapp
+    image: cabify/backend-bootcamp-messageapp:exercise10
     ports:
       - "3000:3000"
 
   mongodb_credit:
     image: mongo
-    command:  
-      - '--logpath'
-      - '/var/log/mongodb/mongod-credit.log'
+    command: mongod --port 27017
     volumes:
       - ./credit/data/db:/credit/data/db
     ports:
       - 27017:27017
   replica_credit:
     image: mongo
-    command:  
-      - '--logpath'
-      - '/var/log/mongodb/mongod-credit-replica.log'   
+    command: mongod --port 27018
     volumes:
       - ./credit/data/replica:/credit/data/replica
     ports:
-      - 27018:27017
+      - 27018:27018
 
   mongodb_message:
     image: mongo
-    command: 
-      - '--logpath'
-      - '/var/log/mongodb/mongod-message.log'
+    command: mongod --port 27027
     volumes:
       - ./message/data/db:/message/data/db
     ports:
-      - 27027:27017
+      - 27027:27027
   replica_message:
     image: mongo
-    command:
-      - '--logpath'
-      - '/var/log/mongodb/mongod-replica-message.log'
+    command: mongod --port 27028
     volumes:
       - ./message/data/replica:/message/data/replica
     ports:
-      - 27028:27017
+      - 27028:27028
 
   redis:
     image: redis
     ports:
       - 6379:6379
-
-  registrator:
-    image: gliderlabs/registrator
+  
+  prometheus:
+    image: prom/prometheus:latest
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock
-    command: -internal consul://consul:8500
-    depends_on:
-      - consul
-    links:
-      - consul
-  consul: 
-    image: consul
-    command: "agent -server -bootstrap -ui -client=0.0.0.0 -bind='{{ GetPrivateIP }}'"
-  haproxy:
-    image: haproxy:1.8-alpine
+      - prometheus_data:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
-      - 48151:48151
-    expose:
-      - 80
-    depends_on:
-      - registrator
-    links:
-      - registrator
+      - '9090:9090'
+  
+  grafana:
+    image: grafana/grafana:latest
     volumes:
-      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
-  # redis-commander:
-  #   container_name: redis-commander
-  #   image: rediscommander/redis-commander
-  #   restart: always
-  #   environment:
-  #     - REDIS_HOSTS=local:redis:6379
-  #   ports:
-  #     - "8081:8081"
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/config.ini:/etc/grafana/config.ini
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=illchangeitanyway
+    depends_on:
+      - prometheus
+    ports:
+      - '3001:3000'
+    
+volumes:
+  prometheus_data: {}
+  grafana_data: {}

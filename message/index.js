@@ -1,23 +1,25 @@
-import bodyParser from "body-parser";
-import express from "express";
-import redisStart from "./src/utils/redisStart.js";
-import { ValidationError, Validator } from "express-json-validator-middleware";
+const express = require("express");
+const logger = require("loglevel");
+logger.setLevel("info");
 
-import getMessages from "./src/controllers/getMessages.js";
-import getMessageStatus from "./src/clients/getMessageStatus.js";
-import checkBalance from "./src/controllers/checkBalance.js";
+const client = require("prom-client");
 
-import getVersion from "./src/clients/getVersion.js";
+const metricExporter = require("./metrics.js");
 
+const bodyParser = require("body-parser");
+const {
+  Validator,
+  ValidationError,
+} = require("express-json-validator-middleware");
 
+const sendMessage = require("./src/controllers/sendMessage");
+const getMessages = require("./src/controllers/getMessages");
+const getMessageStatus = require("./src/controllers/getMessageStatus");
 
 const app = express();
-const redis = redisStart();
 
 const validator = new Validator({ allErrors: true });
 const { validate } = validator;
-
-
 
 const messageSchema = {
   type: "object",
@@ -29,26 +31,41 @@ const messageSchema = {
     body: {
       type: "string",
     },
+    location: {
+      name: {
+        type: "string",
+      },
+      cost: {
+        type: "number",
+      },
+    },
   },
 };
 
 app.post(
-  "/message",
+  "/messages",
   bodyParser.json(),
   validate({ body: messageSchema }),
-  checkBalance
+  sendMessage
 );
 
 app.get("/messages", getMessages);
 
 app.get("/message/:messageId/status", getMessageStatus);
 
-app.get("/health", getMessages)
+metricExporter("pruebaName", "pruebaHelp");
 
-app.get("/version", getVersion)
+app.get("/metrics", async (req, res) => {
+  try {
+    res.set("Content-Type", client.register.contentType);
+    res.end(await client.register.metrics());
+  } catch (ex) {
+    res.status(500).end(ex);
+  }
+});
 
-app.use((err, req, res, _next) => {
-  console.log(res.body);
+app.use(function (err, req, res, next) {
+  logger.info(res.body);
   if (err instanceof ValidationError) {
     res.sendStatus(400);
   } else {
@@ -56,7 +73,6 @@ app.use((err, req, res, _next) => {
   }
 });
 
-const port = 80
-app.listen(port, () => {
-  console.log("App started on PORT: ", port);
+app.listen(9010, function () {
+  logger.info("App started on PORT 9010");
 });
