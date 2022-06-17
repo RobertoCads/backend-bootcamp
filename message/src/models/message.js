@@ -1,29 +1,24 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const database = require("../database");
 
-import database from "../database.js";
-import backupDatabase from "../backupDatabase.js";
-
-const messageSchema = new mongoose.Schema(
-  {
-    destination: String,
-    body: String,
-    status: {
+let messageSchema = new mongoose.Schema({
+  _id: String,
+  destination: String,
+  body: String,
+  location: {
+  	name: {
       type: String,
-      enum: ["ERROR", "OK", "TIMEOUT", "PENDING", "CHECKING BALANCE", "NOT ENOUGH MONEY"],
+      default: "Default"
     },
-    statusId: {
-      type: String
+    cost: {
+      type: Number,
+      default: 1
     }
   },
-  {
-    timestamps: true,
+  status: {
+    type: String,
+    enum: ["ERROR", "OK", "TIMEOUT", "QUEUED"]
   }
-);
+});
 
-const Message = database.model("Message", messageSchema);
-const BackupMessage = backupDatabase.model("BackupMessage", messageSchema);
-
-Message.syncIndexes();
-BackupMessage.syncIndexes();
-
-export { Message, BackupMessage };
+module.exports = (dbKey) => database.get(dbKey).model("Message", messageSchema);
