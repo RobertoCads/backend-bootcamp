@@ -1,49 +1,92 @@
-# Exercise 11
+# Cabify MessageApp
 
-## Intro
+## Deployement
 
-Your code is almost done. It's time to think about monitoring: how you're going to be able to detect problems in production and react to them.
+Once you download it, go to the projects file and run:
 
-This exercise focuses on systems' observability. You will improve your logs' format, report metrics to an analysis dashboard and check out how those systems interact by using distributed tracing.
+(In case you need to install Docker on your desktop go to ==> [link](https://www.docker.com/get-started/) )
 
-### 1 - Standardise logging format
+```bash
+$ docker-compose build
+$ docker-compose up
+```
 
-Logging information is only the beginning. To make the most out of the information you're logging, you need to keep its format consistent. This way you'll be able to analyse and classify those logs, save them, index them, and search for the information you need easily and efficiently.
+## API Reference
+---
+### **Send Message**
 
-- Standardise the logs' format using a dedicated logging library.
-- Make sure that unrecoverable errors get logged with the _error_ level.
-- Make sure recoverable errors get logged with the _warning_ level.
-- Make sure debugging information gets logged with the _debug_ level.
-- Double check that all errors within the application get logged.
+```http
+  POST /messages
+```
 
-### 2 - Monitoring metrics
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `destination`      | `string` | destination of the message |
+| `message`      | `string` | message content |
 
-Exposing internal metrics for each service will give you the ability to know and understand how the system is behaving in production. With them, you'll be able to build analytics dashboards where you'll be seeing all that information at a glance.
 
-Here you'll be introducing a stats service. You'll expose a few metrics, and create dashboards from which you'll monitor and investigate the behaviour of the system in real time.
+### **Send credit**
 
-- Install a [Grafana](https://grafana.com/) image with a [Prometheus](https://prometheus.io/) plugin.
-- Monitor the application using a dedicated metrics endpoint for Prometheus.
-- Using Prometheus, expose the following metrics and setup their corresponding panels in Grafana:
-  - Requests ratio
-  - Errors ratio
-  - Response times
-  - How long a message stays in the queue
-  - How long a message takes to get enqueued
-  - Enqueueing messages ratio
-  - Errors enqueuing messages ratio
-  
-### 3 - Tracing requests
+```http
+  POST /credit
+```
 
-Service side metrics are just one piece of the puzzle. To be able to pinpoint bottlenecks in the system you'll need to adapt the way your application interacts with the other components. You'll be adding new data to your requests, that will enable you to trace them across the whole system.
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `amount`      | `number` | credit amount |
 
-- Introduce Jaeger (Open Tracing) in the system.
-- Monitor your application using Jaeger. Extract and send the trace identifier to any services your application connects to. Send that information to the Jaeger agent.
 
-### 4 - Alerting
 
-The data panels you've been creating let you monitor the system, but you need to be actively looking at them to know whether the system is behaving as intended or not.
+### **Get all messages**
 
-Instead, you can trigger alerts when the system starts behaving in ways it shouldn't or that require immediate attention from you.
+```http
+  GET /messages
+```
 
-- Create an alert on any of the metrics you're monitoring on Grafana, and send a Slack message about it on any channel you choose.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `destination` | `string` | destination of the messages |
+| `message` | `string` | message content |
+| `status` | `enum` | A JSON with all the messages |
+
+
+### **Get status of message**
+
+```http
+  GET /message/:id/status
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `destination` | `string` | destination of the message |
+| `message` | `string` | message id |
+| `status` | `enum` | 200 OK |
+
+
+### **Get metrics**
+
+```http
+  GET /metrics
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `destination` | `string` | all the metrics |
+| `message` | `string` | number of metrics |
+| `status` | `enum` | 200 OK |
+
+
+
+### **Errors**
+
+| Error | Code     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `Bad Request`      | `400` | destination key is not provided or is null |
+| `Bad Request`      | `400` | body key is not provided or is null |
+| `Bad Request`      | `400` | body and destinations keys must be strings |
+| `Server Error`      | `500` | server failed, message unsuccessfully saved |
+
+## POSTMAN
+---
+
+[POSTMAN Tests Collection](Tests.postman_collection.json)
