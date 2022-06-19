@@ -1,10 +1,14 @@
 # Cabify MessageApp
 
+It is a basic message delivery system, that uses an external service called messageapp. The project is an API that interacts with the external service.
+
+---
+
 ## Deployement
 
 Once you download it, go to the projects file and run:
 
-(In case you need to install Docker on your desktop go to ==> [link](https://www.docker.com/get-started/) )
+(In case you need to install Docker on your desktop go to ==> [link](https://www.docker.com/get-started/))
 
 ```bash
 $ docker-compose build
@@ -19,10 +23,10 @@ $ docker-compose up
   POST /messages
 ```
 
-| Parameter | Type     | Description                       |
+| Parameter || Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `destination`      | `string` | destination of the message |
-| `message`      | `string` | message content |
+| `destination`      || destination of the message |
+| `body`      || message content |
 
 
 ### **Send credit**
@@ -31,9 +35,9 @@ $ docker-compose up
   POST /credit
 ```
 
-| Parameter | Type     | Description                       |
+| Parameter || Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `amount`      | `number` | credit amount |
+| `amount`      || credit amount |
 
 
 
@@ -43,11 +47,9 @@ $ docker-compose up
   GET /messages
 ```
 
-| Parameter | Type     | Description                |
+| Parameter || Description                |
 | :-------- | :------- | :------------------------- |
-| `destination` | `string` | destination of the messages |
-| `message` | `string` | message content |
-| `status` | `enum` | A JSON with all the messages |
+| `status` || A JSON with all the messages |
 
 
 ### **Get status of message**
@@ -56,11 +58,10 @@ $ docker-compose up
   GET /message/:id/status
 ```
 
-| Parameter | Type     | Description                |
+| Parameter || Description                |
 | :-------- | :------- | :------------------------- |
-| `destination` | `string` | destination of the message |
-| `message` | `string` | message id |
-| `status` | `enum` | 200 OK |
+| `messageId` || message ID |
+| `status` || 200 OK |
 
 
 ### **Get metrics**
@@ -69,11 +70,10 @@ $ docker-compose up
   GET /metrics
 ```
 
-| Parameter | Type     | Description                |
+| Parameter || Description                |
 | :-------- | :------- | :------------------------- |
-| `destination` | `string` | all the metrics |
-| `message` | `string` | number of metrics |
-| `status` | `enum` | 200 OK |
+| `number` || number of times the endpoint is used |
+| `status` || 200 OK |
 
 
 
